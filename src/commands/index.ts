@@ -1,3 +1,3 @@
-import { post } from "./post"
+import { help } from "./help"
 
-export { post }
+export { help }

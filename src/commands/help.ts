@@ -1,16 +1,14 @@
 import {
   SlashCommandBuilder,
-  TextChannel,
-  EmbedBuilder,
-  ChatInputCommandInteraction
+  ChatInputCommandInteraction,
+  User
 } from "discord.js"
-import { generatedName } from "../functions"
 
-const post = {
+const help = {
   data: new SlashCommandBuilder()
     .setName("help")
     .setDescription("Whats on your mind?"),
-  async execute(interaction: ChatInputCommandInteraction, user: any) {
+  async execute(interaction: ChatInputCommandInteraction, user: User) {
     await user.send({
       content: "Hi there! Thanks you for reaching out. 👋",
       tts: false,
@@ -25,7 +23,6 @@ const post = {
       ],
       components: [
         {
-          id: 599186864,
           type: 1,
           components: [
             {
@@ -50,18 +47,7 @@ const post = {
             }
           ]
         }
-      ],
-      actions: {
-        createthread: {
-          actions: []
-        },
-        closethread: {
-          actions: []
-        },
-        deletethread: {
-          actions: []
-        }
-      }
+      ]
     })
 
     await interaction.reply({
@@ -111,4 +97,4 @@ const post = {
     //   // )
   }
 }
-export { post }
+export { help }

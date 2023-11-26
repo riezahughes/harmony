@@ -1,5 +1,5 @@
 import { REST, Routes } from "discord.js"
-import { post } from "./commands"
+import { help } from "./commands"
 
 const { CLIENT_ID, GUILD_ID, TOKEN } = process.env
 
@@ -7,7 +7,7 @@ if (!CLIENT_ID || !GUILD_ID || !TOKEN) {
   throw Error("Missing ENV details")
 }
 
-const commands = [post.data.toJSON()]
+const commands = [help.data.toJSON()]
 // Grab all the command files from the commands directory you created earlier
 
 // Construct and prepare an instance of the REST module
