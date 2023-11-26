@@ -6,6 +6,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "devDependencies": {
+    "@types/node": "^20.9.3",
     "@typescript-eslint/eslint-plugin": "^6.12.0",
     "@typescript-eslint/parser": "^6.12.0",
     "eslint": "^8.54.0",
@@ -15,6 +16,7 @@
   },
   "scripts": {
     "start": "bun src/index.ts",
+    "reg": "bun src/deploy-commands.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
