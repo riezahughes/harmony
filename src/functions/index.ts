@@ -1,3 +1,3 @@
-import generatedName from "./generateName"
+import generatedName from "./generatedName"
 
 export { generatedName }

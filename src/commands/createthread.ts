@@ -11,7 +11,7 @@ const createthread = {
   data: { name: "createthread" },
   async execute(interaction: ChatInputCommandInteraction) {
     const modal = new ModalBuilder()
-      .setCustomId("createThreadModal")
+      .setCustomId("submitmodal")
       .setTitle("My Problem")
 
     const titleInput = new TextInputBuilder()

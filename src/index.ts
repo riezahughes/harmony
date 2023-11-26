@@ -1,6 +1,8 @@
 import { Client, Collection, Events, GatewayIntentBits } from "discord.js"
 import { help } from "./commands"
 import { createthread } from "./commands/createThread"
+import { submitmodal } from "./commands/submitmodal"
+import { channel } from "diagnostics_channel"
 
 const { TOKEN, CHANNEL_ID, GUILD_ID } = process.env
 
@@ -15,11 +17,11 @@ const client = new Client({
 
 client.commands = new Collection()
 
-const commands = [help, createthread]
 // Set a new item in the Collection with the key as the command name and the value as the exported module
 
-client.commands.set(help.data.name as any, help)
+client.commands.set(help.data.name, help)
 client.commands.set(createthread.data.name, createthread)
+client.commands.set(submitmodal.data.name, submitmodal)
 
 // When the client is ready, run this code (only once)
 // We use 'c' for the event parameter to keep it separate from the already defined 'client'
@@ -29,6 +31,11 @@ client.once(Events.ClientReady, (c) => {
 
 client.on(Events.InteractionCreate, async (interaction) => {
   if (!interaction.isChatInputCommand() && !interaction.isButton) return
+
+  const guild = client.guilds.cache.get(GUILD_ID) // Assuming you're using interactions
+  const targetChannel = guild?.channels.cache.find(
+    (channel) => channel.id === CHANNEL_ID
+  )
 
   const user = client.users.cache.find(
     (user) => user.id === interaction.user.id
@@ -83,8 +90,15 @@ client.on(Events.InteractionCreate, async (interaction) => {
   }
 
   if (interaction.isModalSubmit()) {
-    console.log("Modal Submission" + interaction.customId)
-    interaction.reply("Thank you. Your thread has been created.")
+    const command = interaction.client.commands.get(interaction.customId)
+
+    console.log("Modal Submission " + interaction.customId)
+
+    const thread = await command.execute(interaction, targetChannel)
+
+    const link = `https://discord.com/channels/${targetChannel?.id}/${thread.thread}`
+
+    interaction.reply(`Thank you. Your thread has been created. ${link}`)
   }
 })
 
