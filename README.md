@@ -4,9 +4,9 @@ This bot is being created to help those who struggle to reach out. It will be an
 
 As a user i want to be able to post my feelings anonymously
 
-- [ ] Create Working Slash Command (/help)
-- [ ] Create DM response after slash command
-- [ ] Create Button interaction for creating a new thread
+- [x] Create Working Slash Command (/help)
+- [x] Create DM response after slash command
+- [x] Create Button interaction for creating a new thread
 
 As a user i want to be able to respond to my thread anonymously
 
@@ -17,6 +17,17 @@ As a user i want to be able to close any conversations, with the option to compl
 
 - [ ] Offer interactions which will allow the user at any point to close or completely delete the thread.
 
-As a bonus to this
+# As a bonus to this:
 
-- [ ] Break the bot out to deal with multiple servers
+---
+
+Break the bot out to deal with multiple servers
+
+- [ ] Set the slash command to be available "globally".
+- [ ] Set up database for storing guild id's, user id's, channel id's, post id's and thread id's
+- [ ] On join of server, save guild id, save user who added bot.
+- [ ] Message the user who added so you can select which channel to use (list/string input/by id)
+- [ ] Save the channel id.
+- [ ] On /help, check if the user exists. If the user doesn't exist, store their user id against the guild they used the command from, and create a custom name against them using the name generator.
+- [ ] On "create thread" store the created post and thread id's against the user. (One to many).
+- [ ] On reply, keep a stock of how many replies have been sent

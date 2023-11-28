@@ -1,4 +1,8 @@
-import { ModalMessageModalSubmitInteraction, TextChannel } from "discord.js"
+import {
+  ModalMessageModalSubmitInteraction,
+  TextChannel,
+  ThreadAutoArchiveDuration
+} from "discord.js"
 import { generatedName } from "../functions/"
 
 const submitmodal = {
@@ -46,8 +50,8 @@ const submitmodal = {
       ]
     })
     const newThread = await newPost.startThread({
-      name: `${name}-${newPost.createdTimestamp}`,
-      autoArchiveDuration: 60
+      name: `${title} - asked by ${name}}`,
+      autoArchiveDuration: ThreadAutoArchiveDuration.OneWeek
     })
 
     return {
