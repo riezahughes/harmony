@@ -1,8 +1,7 @@
 import { Client, Collection, Events, GatewayIntentBits } from "discord.js"
 import { help } from "./commands"
-import { createthread } from "./commands/createThread"
+import { createthread } from "./commands/createthread"
 import { submitmodal } from "./commands/submitmodal"
-import { channel } from "diagnostics_channel"
 
 const { TOKEN, CHANNEL_ID, GUILD_ID } = process.env
 

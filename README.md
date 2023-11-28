@@ -31,3 +31,8 @@ Break the bot out to deal with multiple servers
 - [ ] On /help, check if the user exists. If the user doesn't exist, store their user id against the guild they used the command from, and create a custom name against them using the name generator.
 - [ ] On "create thread" store the created post and thread id's against the user. (One to many).
 - [ ] On reply, keep a stock of how many replies have been sent
+
+# Quick Commands
+
+`bunx prisma migrate dev --name [name]` - migration
+`bunx prisma generate` - create new package to import
