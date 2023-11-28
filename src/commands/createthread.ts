@@ -16,9 +16,7 @@ const createthread = {
 
     const titleInput = new TextInputBuilder()
       .setCustomId("titleInput")
-      // The label is the prompt the user sees for this input
       .setLabel("Give a title for your post")
-      // Short means only a single line of text
       .setStyle(TextInputStyle.Short)
       .setMinLength(1)
       .setMaxLength(4000)
@@ -26,7 +24,6 @@ const createthread = {
     const infoInput = new TextInputBuilder()
       .setCustomId("infoInput")
       .setLabel("What's going on?")
-      // Paragraph means multiple lines of text.
       .setStyle(TextInputStyle.Paragraph)
       .setMinLength(1)
       .setMaxLength(4000)
