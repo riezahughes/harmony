@@ -8,6 +8,9 @@ import getGuildByDiscordId from "./db/getGuildByDiscordId"
 import getPostByDiscordId from "./db/getPostByDiscordId"
 import getThreadByDiscordId from "./db/getThreadByDiscordId"
 import getUserByDiscordId from "./db/getUserByDiscordId"
+import getTimeForPrisma from "./getTimeForPrisma"
+
+import updateGuild from "./db/updateGuild"
 
 export {
   generatedName,
@@ -19,5 +22,7 @@ export {
   getGuildByDiscordId,
   getPostByDiscordId,
   getThreadByDiscordId,
-  getUserByDiscordId
+  getUserByDiscordId,
+  getTimeForPrisma,
+  updateGuild
 }

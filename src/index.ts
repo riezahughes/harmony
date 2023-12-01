@@ -2,6 +2,14 @@ import { Client, Collection, Events, GatewayIntentBits } from "discord.js"
 import { help } from "./commands"
 import { createthread } from "./commands/createthread"
 import { submitmodal } from "./commands/submitmodal"
+import {
+  createGuild,
+  prismaClient,
+  updateGuild,
+  getTimeForPrisma,
+  getGuildByDiscordId
+} from "./functions"
+import { botJoin, botReturn } from "./templates"
 
 const { TOKEN, CHANNEL_ID, GUILD_ID } = process.env
 
@@ -13,6 +21,8 @@ if (!TOKEN || !CHANNEL_ID || !GUILD_ID) throw Error("Token not set.")
 const client = new Client({
   intents: [GatewayIntentBits.Guilds]
 })
+
+const prisma = prismaClient()
 
 client.commands = new Collection()
 
@@ -28,10 +38,54 @@ client.once(Events.ClientReady, (c) => {
   console.log(`Ready! Logged in as ${c.user.tag}`)
 })
 
+client.on(Events.GuildCreate, async (event) => {
+  // check if the guild exists
+  const existance = await getGuildByDiscordId(prisma, event.id)
+
+  // search for the audit log of being added to the server
+  const auditEvent = await event.fetchAuditLogs({ limit: 1, type: 28 })
+
+  // get the user object from the audit logs.
+  const user = auditEvent?.entries?.first()?.executor
+
+  if (existance?.did && existance.timesAdded) {
+    await updateGuild(prisma, {
+      did: event.id,
+      name: event.name,
+      addedBy: event.ownerId,
+      timesAdded: existance?.timesAdded + 1,
+      enabled: true
+    })
+  } else {
+    await createGuild(prisma, {
+      did: event.id,
+      name: event.name,
+      addedBy: event.ownerId,
+      timesAdded: 1
+    })
+  }
+
+  const joinCommand = existance ? botReturn() : botJoin()
+
+  user?.send(joinCommand)
+})
+
+client.on(Events.GuildDelete, async (event) => {
+  const currentDateTime = getTimeForPrisma()
+  await updateGuild(prisma, {
+    did: event.id,
+    name: event.name,
+    enabled: false,
+    dateRemoved: currentDateTime,
+    addedBy: event.ownerId
+  })
+})
+
 client.on(Events.InteractionCreate, async (interaction) => {
   if (!interaction.isChatInputCommand() && !interaction.isButton) return
 
-  const guild = client.guilds.cache.get(GUILD_ID) // Assuming you're using interactions
+  const guild = interaction.guild // Assuming you're using interactions
+
   const targetChannel = guild?.channels.cache.find(
     (channel) => channel.id === CHANNEL_ID
   )

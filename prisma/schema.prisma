@@ -14,6 +14,8 @@ model DiscordGuild {
   id          Int           @id @default(autoincrement())
   did         String
   name        String
+  addedBy     String
+  timesAdded  Int?           
   dateAdded   DateTime      @default(now())
   dateRemoved DateTime?
   users       DiscordUser[]
