@@ -9,9 +9,13 @@ import {
 
 const createthread = {
   data: { name: "createthread" },
-  async execute(interaction: ChatInputCommandInteraction) {
+  async execute(
+    interaction: ChatInputCommandInteraction,
+    user: any,
+    guildId: string
+  ) {
     const modal = new ModalBuilder()
-      .setCustomId("submitmodal")
+      .setCustomId(`submitmodal~${guildId}`)
       .setTitle("My Problem")
 
     const titleInput = new TextInputBuilder()

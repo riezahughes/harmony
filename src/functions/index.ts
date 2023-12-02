@@ -9,6 +9,7 @@ import getPostByDiscordId from "./db/getPostByDiscordId"
 import getThreadByDiscordId from "./db/getThreadByDiscordId"
 import getUserByDiscordId from "./db/getUserByDiscordId"
 import getTimeForPrisma from "./getTimeForPrisma"
+import sendMessageToGPT from "./gpt/sendMessagetoGPT"
 
 import updateGuild from "./db/updateGuild"
 
@@ -24,5 +25,6 @@ export {
   getThreadByDiscordId,
   getUserByDiscordId,
   getTimeForPrisma,
-  updateGuild
+  updateGuild,
+  sendMessageToGPT
 }

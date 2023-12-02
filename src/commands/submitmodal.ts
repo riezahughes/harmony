@@ -3,23 +3,28 @@ import {
   TextChannel,
   ThreadAutoArchiveDuration
 } from "discord.js"
+import { DiscordUser } from "@prisma/client"
 import { create } from "../templates"
-import { generatedName } from "../functions/"
+import { sendMessageToGPT } from "../functions/"
 
 const submitmodal = {
   data: { name: "submitmodal" },
   async execute(
     interaction: ModalMessageModalSubmitInteraction,
-    channel: TextChannel
+    channel: TextChannel,
+    dbUser: DiscordUser
   ) {
     const title =
       interaction.fields.getTextInputValue("titleInput") || undefined
     const text = interaction.fields.getTextInputValue("infoInput") || undefined
 
-    // name will be stored against the post
-    const name = generatedName()
+    interaction.reply("I'm working on it! Give me one second...")
 
-    const json = create(title, text, name)
+    const alteredText = await sendMessageToGPT(text as string)
+
+    // name will be stored against the post
+
+    const json = create(title, alteredText, dbUser.alias)
 
     const newPost = await channel.send(json)
 

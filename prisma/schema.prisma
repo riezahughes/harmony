@@ -13,9 +13,10 @@ datasource db {
 model DiscordGuild {
   id          Int           @id @default(autoincrement())
   did         String
+  channel     String?
   name        String
   addedBy     String
-  timesAdded  Int?           
+  timesAdded  Int?
   dateAdded   DateTime      @default(now())
   dateRemoved DateTime?
   users       DiscordUser[]
@@ -24,6 +25,7 @@ model DiscordGuild {
 
 model DiscordUser {
   id          Int           @id @default(autoincrement())
+  alias       String
   did         String
   guilds      DiscordGuild  @relation(fields: [guildId], references: [id])
   dateAdded   DateTime?     @default(now())

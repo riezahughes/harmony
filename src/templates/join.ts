@@ -1,4 +1,4 @@
-const botJoin = () => {
+const botJoin = (guildId: string) => {
   return {
     content: "Hi there! Thanks for adding me. 👋",
     tts: false,
@@ -19,13 +19,13 @@ const botJoin = () => {
             type: 2,
             style: 3,
             label: "Create a new channel to use",
-            customId: "createchannel"
+            customId: `createchannel~${guildId}`
           },
           {
             type: 2,
             style: 1,
             label: "Join an Existing Channel",
-            customId: "joinchannel"
+            customId: `joinchannel~${guildId}`
           }
         ]
       }
