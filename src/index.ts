@@ -1,4 +1,10 @@
-import { Client, Collection, Events, GatewayIntentBits } from "discord.js"
+import {
+  ChannelType,
+  Client,
+  Collection,
+  Events,
+  GatewayIntentBits
+} from "discord.js"
 import { help } from "./commands"
 import { createthread } from "./commands/createthread"
 import { submitmodal } from "./commands/submitmodal"
@@ -82,7 +88,7 @@ client.on(Events.GuildCreate, async (event) => {
       name: event.name,
       addedBy: event.ownerId,
       timesAdded: existance?.timesAdded + 1,
-      enabled: true
+      enabled: false
     })
   } else {
     console.log("Creating new guild record")
@@ -192,6 +198,28 @@ client.on(Events.InteractionCreate, async (interaction) => {
         }
       }
     }
+
+    if (action.action == "createchannel") {
+      const newChannel = await guildDiscordObject?.channels.create({
+        name: "the-safe-space",
+        topic:
+          "A place where people can chat anonymously about anything. `/help` to get started!",
+        type: ChannelType.GuildText,
+        position: 0
+      })
+
+      await updateGuild(prisma, guildFromDb?.did as string, {
+        enabled: true,
+        channel: newChannel?.id
+      })
+
+      await interaction.reply(
+        `The channel has been created and you are now set to go! Make sure to move it around and adjust permissions as neccessary! https://discord.com/channels/${guildDiscordObject?.id}/${newChannel?.id}`
+      )
+    }
+
+    if (action.action == "joinchannel") {
+    }
   }
 
   if (interaction.isModalSubmit()) {
@@ -206,11 +234,16 @@ client.on(Events.InteractionCreate, async (interaction) => {
       (channel) => channel.id === guildFromDbModal?.channel
     )
 
-    const dbUser = getUserByDiscordId(prisma, interaction.user.id)
+    const dbUser = await getUserByDiscordId(prisma, interaction.user.id)
 
-    const command = interaction.client.commands.get(interaction.customId)
+    const command = interaction.client.commands.get(action.action)
 
-    const thread = await command.execute(interaction, targetChannel, dbUser)
+    const thread = await command.execute(
+      interaction,
+      prisma,
+      targetChannel,
+      dbUser
+    )
 
     const link = `https://discord.com/channels/${targetChannel?.id}/${thread.thread}`
 

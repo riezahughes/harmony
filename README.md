@@ -36,4 +36,4 @@ Break the bot out to deal with multiple servers
 
 `bunx prisma migrate dev --name [name]` - migration
 `bunx prisma generate` - create new package to import
-https://discord.com/api/oauth2/authorize?client_id=1176575107104247859&permissions=397351660752&scope=bot
+https://diascord.com/api/oauth2/authorize?client_id=1176575107104247859&permissions=397351660752&scope=bot

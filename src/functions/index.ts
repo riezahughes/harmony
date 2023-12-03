@@ -12,6 +12,7 @@ import getTimeForPrisma from "./getTimeForPrisma"
 import sendMessageToGPT from "./gpt/sendMessagetoGPT"
 
 import updateGuild from "./db/updateGuild"
+import updateUser from "./db/updateUser"
 
 export {
   generatedName,
@@ -26,5 +27,6 @@ export {
   getUserByDiscordId,
   getTimeForPrisma,
   updateGuild,
+  updateUser,
   sendMessageToGPT
 }

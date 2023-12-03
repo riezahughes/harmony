@@ -39,11 +39,9 @@ model DiscordPost {
   id          Int            @id @default(autoincrement())
   did         String
   title       String
-  nameForPost String
   dateAdded   DateTime?      @default(now())
   user        DiscordUser    @relation(fields: [userId], references: [id])
   thread      DiscordThread?
-  threadId    Int
   userId      Int
 }
 

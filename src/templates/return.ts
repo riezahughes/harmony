@@ -24,8 +24,8 @@ const botReturn = (guildId: string) => {
           {
             type: 2,
             style: 1,
-            label: `Join an Existing Channel-${guildId}`,
-            customId: `joinchannel`
+            label: `Join an Existing Channel`,
+            customId: `joinchannel-${guildId}`
           }
         ]
       }

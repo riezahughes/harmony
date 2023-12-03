@@ -5,12 +5,18 @@ import {
 } from "discord.js"
 import { DiscordUser } from "@prisma/client"
 import { create } from "../templates"
-import { sendMessageToGPT } from "../functions/"
+import {
+  createPost,
+  updateUser,
+  sendMessageToGPT,
+  createThread
+} from "../functions/"
 
 const submitmodal = {
   data: { name: "submitmodal" },
   async execute(
     interaction: ModalMessageModalSubmitInteraction,
+    prisma: any,
     channel: TextChannel,
     dbUser: DiscordUser
   ) {
@@ -29,8 +35,37 @@ const submitmodal = {
     const newPost = await channel.send(json)
 
     const newThread = await newPost.startThread({
-      name: `${title} - asked by ${name}`,
+      name: `${title} - asked by ${dbUser.alias}`,
       autoArchiveDuration: ThreadAutoArchiveDuration.OneWeek
+    })
+
+    // db stuff
+
+    const dbPost = await createPost(prisma, {
+      did: newPost.id,
+      title: title as string,
+      user: {
+        connect: {
+          id: dbUser.id
+        }
+      }
+    })
+
+    updateUser(prisma, dbUser.did, {
+      posts: {
+        connect: {
+          id: dbPost.id
+        }
+      }
+    })
+
+    createThread(prisma, {
+      did: newThread.id,
+      post: {
+        connect: {
+          id: dbPost.id
+        }
+      }
     })
 
     return {
