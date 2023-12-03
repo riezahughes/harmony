@@ -215,7 +215,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
       console.log("CLOSE")
       const thread = await client.channels.fetch(action.threadId as string)
       if (!thread?.isThread()) return
-      await thread.setArchived(true)
+      await thread.setLocked(true)
 
       interaction.reply({
         ephemeral: true,

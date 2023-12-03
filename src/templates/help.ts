@@ -16,7 +16,7 @@ const help = (
       }
     })
 
-  const componentArray = selectedOptions && {
+  const componentArray = selectedOptions?.length && {
     type: 1,
     components: [
       {
@@ -58,6 +58,7 @@ const help = (
   }
 
   finalArray.push(buttonsRow)
+  console.log(finalArray)
 
   return {
     content: "Hi there! Thanks you for reaching out. 👋",

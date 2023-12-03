@@ -1,9 +1,17 @@
 import { PrismaClient } from "@prisma/client"
+import getGuildByDiscordId from "./getGuildByDiscordId"
 
-const getPostsByUserDiscordId = async (client: PrismaClient, id: string) => {
+const getPostsByUserDiscordId = async (
+  client: PrismaClient,
+  id: string,
+  guild: string
+) => {
+  const guildRecord = await getGuildByDiscordId(client, guild)
+
   const record = await client.discordUser.findFirst({
     where: {
-      did: id
+      did: id,
+      guildId: guildRecord?.id
     },
     include: {
       posts: true

@@ -23,7 +23,7 @@ const help = {
     guild: string,
     user: User
   ) {
-    const posts = await getPostsByUserDiscordId(client, user.id)
+    const posts = await getPostsByUserDiscordId(client, user.id, guild)
 
     const passingPosts = posts ? posts : []
 
@@ -32,7 +32,7 @@ const help = {
     await user.send(json)
 
     const alias = generatedName()
-    console.log(guild)
+
     const foundGuild = await getGuildByDiscordId(client, guild)
 
     console.log(foundGuild)
