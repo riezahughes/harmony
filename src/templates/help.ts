@@ -1,4 +1,64 @@
-const help = (guildId: string) => {
+import { MessageCreateOptions } from "discord.js"
+import { DiscordPost } from "@prisma/client"
+
+const help = (
+  guildId: string,
+  userPosts: Array<DiscordPost> | null
+): MessageCreateOptions => {
+  const finalArray = []
+
+  const selectedOptions =
+    userPosts &&
+    userPosts?.map((post) => {
+      return {
+        label: post.title,
+        value: post.did
+      }
+    })
+
+  const componentArray = selectedOptions && {
+    type: 1,
+    components: [
+      {
+        type: 3,
+        options: selectedOptions,
+        disabled: false,
+        placeholder: "Interact with existing threads...",
+        customId: `selectingpost~${guildId}`
+      }
+    ]
+  }
+
+  if (componentArray) finalArray.push(componentArray)
+
+  const buttonsRow = {
+    type: 1,
+    components: [
+      {
+        type: 2,
+        style: 3,
+        label: "Start a thread",
+        customId: `createthread~${guildId}`
+      },
+      {
+        type: 2,
+        style: 2,
+        label: "Close Existing Thread",
+        customId: `closethread~${guildId}`,
+        disabled: true
+      },
+      {
+        type: 2,
+        style: 2,
+        label: "Delete Existing Thread",
+        customId: `deletethread~${guildId}`,
+        disabled: true
+      }
+    ]
+  }
+
+  finalArray.push(buttonsRow)
+
   return {
     content: "Hi there! Thanks you for reaching out. 👋",
     tts: false,
@@ -11,33 +71,7 @@ const help = (guildId: string) => {
         fields: []
       }
     ],
-    components: [
-      {
-        type: 1,
-        components: [
-          {
-            type: 2,
-            style: 3,
-            label: "Start a thread",
-            customId: `createthread~${guildId}`
-          },
-          {
-            type: 2,
-            style: 2,
-            label: "Close Existing Thread",
-            customId: `closethread~${guildId}`,
-            disabled: true
-          },
-          {
-            type: 2,
-            style: 2,
-            label: "Delete Existing Thread",
-            customId: `deletethread~${guildId}`,
-            disabled: true
-          }
-        ]
-      }
-    ]
+    components: finalArray
   }
 }
 

@@ -18,7 +18,8 @@ const getGuildFromInteraction = (customId: string) => {
 
   return {
     action: array[0],
-    guildId: array[1]
+    guildId: array[1],
+    threadId: array[2] || null
   }
 }
 

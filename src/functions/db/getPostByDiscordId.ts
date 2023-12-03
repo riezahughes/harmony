@@ -1,9 +1,12 @@
 import { PrismaClient } from "@prisma/client"
 
 const getPostByDiscordId = async (client: PrismaClient, id: string) => {
-  return await client.discordUser.findFirst({
+  return await client.discordPost.findFirst({
     where: {
       did: id
+    },
+    include: {
+      thread: true
     }
   })
 }

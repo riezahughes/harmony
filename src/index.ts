@@ -3,7 +3,8 @@ import {
   Client,
   Collection,
   Events,
-  GatewayIntentBits
+  GatewayIntentBits,
+  ThreadChannel
 } from "discord.js"
 import { help } from "./commands"
 import { createthread } from "./commands/createthread"
@@ -14,9 +15,13 @@ import {
   updateGuild,
   getTimeForPrisma,
   getGuildByDiscordId,
-  getUserByDiscordId
+  getUserByDiscordId,
+  sendModalToUser,
+  sendMessageToThread,
+  getThreadByDiscordId
 } from "./functions"
-import { botJoin, botReturn } from "./templates"
+
+import { adjustThread, botJoin, botReturn } from "./templates"
 import getGuildFromInteraction from "./functions/getGuildFromInteraction"
 
 const { TOKEN, CHANNEL_ID, GUILD_ID } = process.env
@@ -27,7 +32,7 @@ if (!TOKEN || !CHANNEL_ID || !GUILD_ID) throw Error("Token not set.")
 
 // Create a new client instance
 const client = new Client({
-  intents: [GatewayIntentBits.Guilds]
+  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages]
 })
 
 const prisma = prismaClient()
@@ -83,7 +88,7 @@ client.on(Events.GuildCreate, async (event) => {
 
   if (existance?.did && existance.timesAdded) {
     console.log("Updating guild in db")
-    await updateGuild(prisma, {
+    await updateGuild(prisma, event.id, {
       did: event.id,
       name: event.name,
       addedBy: event.ownerId,
@@ -108,7 +113,7 @@ client.on(Events.GuildCreate, async (event) => {
 
 client.on(Events.GuildDelete, async (event) => {
   const currentDateTime = getTimeForPrisma()
-  await updateGuild(prisma, {
+  await updateGuild(prisma, event.id, {
     did: event.id,
     name: event.name,
     enabled: false,
@@ -117,8 +122,23 @@ client.on(Events.GuildDelete, async (event) => {
   })
 })
 
+// on thread message
+client.on(Events.MessageCreate, async (msg) => {
+  if (msg.channel.type == ChannelType.PublicThread && !msg.author.bot) {
+    // const threadInDb = await getThreadByDiscordId(prisma, msg.thread?.id as string)
+    // i have recieved a message that was in a thread
+    // i will check the thread exists in the db
+    // i will get the post details from the db
+  }
+})
+
 client.on(Events.InteractionCreate, async (interaction) => {
-  if (!interaction.isChatInputCommand() && !interaction.isButton) return
+  if (
+    !interaction.isChatInputCommand() &&
+    !interaction.isButton &&
+    !interaction.isAnySelectMenu
+  )
+    return
 
   // as the slash command is coming from a DM, you need to link it to
   // the guild. Possibly having it on the custom id you click?
@@ -132,6 +152,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
   // console.log(guild)
   // console.log(guild?.id)
   // console.log(guild?.name)
+
+  // console.log(interaction?.)
 
   const user = client.users.cache.find(
     (user) => user.id === interaction.user.id
@@ -179,6 +201,40 @@ client.on(Events.InteractionCreate, async (interaction) => {
       (guild) => guild.id === action.guildId
     )
 
+    if (action.action == "replythread") {
+      console.log("REPLY")
+      // reply as
+      await sendModalToUser(
+        interaction,
+        guildFromDb?.did as string,
+        action.threadId as string
+      )
+    }
+
+    if (action.action == "closethread") {
+      console.log("CLOSE")
+      const thread = await client.channels.fetch(action.threadId as string)
+      if (!thread?.isThread()) return
+      await thread.setArchived(true)
+
+      interaction.reply({
+        ephemeral: true,
+        content: "Your thread has been closed."
+      })
+    }
+
+    if (action.action == "deletethread") {
+      console.log("DELETE")
+      const thread = await client.channels.fetch(action.threadId as string)
+      if (!thread?.isThread()) return
+      await thread.setArchived(true)
+      await await thread?.delete()
+      interaction.reply({
+        ephemeral: true,
+        content: "Your thread has been destroyed."
+      })
+    }
+
     if (action.action === "createthread") {
       const command = interaction.client.commands.get("createthread")
       try {
@@ -219,6 +275,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
     }
 
     if (action.action == "joinchannel") {
+      // join channel goes here
     }
   }
 
@@ -236,20 +293,75 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
     const dbUser = await getUserByDiscordId(prisma, interaction.user.id)
 
-    const command = interaction.client.commands.get(action.action)
+    if (action.action == "submitreply") {
+      const threadChannel = client?.channels.cache.find(
+        (channel) => channel.id === action.threadId
+      )
 
-    const thread = await command.execute(
-      interaction,
+      if (!threadChannel?.isThread) return
+
+      await sendMessageToThread(
+        interaction,
+        prisma,
+        threadChannel as ThreadChannel,
+        dbUser?.alias as string
+      )
+
+      const link = `https://discord.com/channels/${targetChannel?.id}/${threadChannel.id}`
+
+      const userDiscordObject = await client.users.cache.find(
+        (user) => user.id === dbUser?.did
+      )
+
+      userDiscordObject?.send(`Reply, sent! ${link}`)
+    }
+
+    if (action.action == "submitmodal") {
+      const command = interaction.client.commands.get(action.action)
+
+      const thread = await command.execute(
+        interaction,
+        prisma,
+        targetChannel,
+        dbUser
+      )
+
+      const link = `https://discord.com/channels/${targetChannel?.id}/${thread.thread}`
+
+      const userDiscordObject = await client.users.cache.find(
+        (user) => user.id === dbUser?.did
+      )
+
+      userDiscordObject?.send(
+        `Thank you. Your thread has been created. ${link}`
+      )
+    }
+  }
+
+  if (interaction.isAnySelectMenu()) {
+    console.log(`customId for select: ${interaction.customId}`)
+    console.log(`value: ${interaction.values.toString()}`)
+
+    const action = getGuildFromInteraction(interaction.customId)
+
+    const guildFromDb = await getGuildByDiscordId(
       prisma,
-      targetChannel,
-      dbUser
+      action.guildId as string
     )
 
-    const link = `https://discord.com/channels/${targetChannel?.id}/${thread.thread}`
+    const threadFromDb = await getThreadByDiscordId(
+      prisma,
+      interaction.values[0].toString()
+    )
 
-    interaction.reply(`Thank you. Your thread has been created. ${link}`)
+    const json = adjustThread(
+      threadFromDb?.post.title as string,
+      threadFromDb?.did as string,
+      guildFromDb?.did as string
+    )
+
+    interaction.reply(json)
   }
 })
 
-// Log in to Discord with your client's token
 client.login(TOKEN)

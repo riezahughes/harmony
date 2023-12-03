@@ -1,12 +1,16 @@
 import {
   SlashCommandBuilder,
   ChatInputCommandInteraction,
-  User,
-  Guild
+  User
 } from "discord.js"
 
 import { help as helpCommand } from "../templates"
-import { createUser, generatedName, getGuildByDiscordId } from "../functions"
+import {
+  createUser,
+  generatedName,
+  getGuildByDiscordId,
+  getPostsByUserDiscordId
+} from "../functions"
 import { PrismaClient } from "@prisma/client"
 
 const help = {
@@ -19,7 +23,11 @@ const help = {
     guild: string,
     user: User
   ) {
-    const json = helpCommand(guild)
+    const posts = await getPostsByUserDiscordId(client, user.id)
+
+    const passingPosts = posts ? posts : []
+
+    const json = helpCommand(guild, passingPosts)
 
     await user.send(json)
 
