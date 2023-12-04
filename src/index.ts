@@ -261,7 +261,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
       await discordThread.setLocked(true)
 
-      await updatePost(prisma, thread?.did as string, {
+      await updatePost(prisma, thread?.post.did as string, {
         enabled: false,
         thread: {
           update: {
@@ -288,9 +288,12 @@ client.on(Events.InteractionCreate, async (interaction) => {
       if (!discordThread?.isThread()) return
       await discordThread.setArchived(true)
       await discordThread?.delete()
-      await discordThread.parent?.delete()
 
-      await updatePost(prisma, thread?.did as string, {
+      const message = await discordThread.fetchStarterMessage()
+
+      await message?.delete()
+
+      await updatePost(prisma, thread?.post.did as string, {
         enabled: false,
         thread: {
           update: {
