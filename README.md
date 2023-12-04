@@ -39,6 +39,8 @@ Break the bot out to deal with multiple servers
 
 # Reminders
 
+- POST BEING REFERENCED AS SOMEONE ELSE?
+- delete the message as well as the thread.
 - Fix up a simple response service for a good bot loop
 - remove redundant buttons
 - sort out proper editting of messages and pings by the bot

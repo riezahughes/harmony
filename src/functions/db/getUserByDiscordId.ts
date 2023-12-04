@@ -1,10 +1,12 @@
-import { PrismaClient } from "@prisma/client"
+import { PrismaClient, Prisma } from "@prisma/client"
 
-const getUserByDiscordId = async (client: PrismaClient, id: string) => {
+const getUserByDiscordId = async (
+  client: PrismaClient,
+  id: string,
+  where: Prisma.DiscordUserWhereInput = { did: id }
+) => {
   return await client.discordUser.findFirst({
-    where: {
-      did: id
-    },
+    where,
     include: {
       guilds: true
     }

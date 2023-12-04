@@ -13,6 +13,8 @@ import getPostsByUserDiscordId from "./db/getPostsByUserDiscordId"
 import sendModalToUser from "./sendModalToUser"
 import sendMessageToGPT from "./gpt/sendMessagetoGPT"
 import sendMessageToThread from "./sendMessageToThread"
+import updateThread from "./db/updateThread"
+import updatePost from "./db/updatePost"
 
 import updateGuild from "./db/updateGuild"
 import updateUser from "./db/updateUser"
@@ -34,5 +36,7 @@ export {
   getPostsByUserDiscordId,
   sendMessageToGPT,
   sendModalToUser,
-  sendMessageToThread
+  sendMessageToThread,
+  updateThread,
+  updatePost
 }

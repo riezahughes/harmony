@@ -5,10 +5,10 @@ import {
   ModalActionRowComponentBuilder
 } from "@discordjs/builders"
 
-import { TextInputStyle } from "discord.js"
+import { ButtonInteraction, TextInputStyle } from "discord.js"
 
 const sendModalToUser = async (
-  interaction: any,
+  interaction: ButtonInteraction,
   guildId: string,
   threadId: string
 ) => {

@@ -1,11 +1,7 @@
-import {
-  ThreadChannel,
-  ModalMessageModalSubmitInteraction,
-  ModalSubmitInteraction
-} from "discord.js"
+import { ThreadChannel, ModalSubmitInteraction } from "discord.js"
 import { reply } from "../templates"
 import sendMessageToGPT from "./gpt/sendMessagetoGPT"
-import { DiscordUser, PrismaClient } from "@prisma/client"
+import { PrismaClient } from "@prisma/client"
 
 const sendMessageToThread = async (
   interaction: ModalSubmitInteraction,
@@ -15,13 +11,18 @@ const sendMessageToThread = async (
 ) => {
   const value = interaction.fields.getTextInputValue("replyInput")
 
-  interaction.reply("Sorted and sending your message...")
+  const replyInteraction = await interaction.reply({
+    ephemeral: true,
+    content: "On its way!"
+  })
 
   const msg = await sendMessageToGPT(value)
 
   const json = reply(msg, alias)
 
   const newPost = await channel.send(json)
+
+  await replyInteraction.edit("`Message Sent!`")
 
   return newPost
 }

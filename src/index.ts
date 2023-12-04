@@ -18,7 +18,8 @@ import {
   getUserByDiscordId,
   sendModalToUser,
   sendMessageToThread,
-  getThreadByDiscordId
+  getThreadByDiscordId,
+  updatePost
 } from "./functions"
 
 import { adjustThread, botJoin, botReturn } from "./templates"
@@ -162,7 +163,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
   if (interaction.isChatInputCommand()) {
     const guild = interaction.guildId
 
-    console.error(guild)
+    // console.error(guild)
 
     const command = interaction.client.commands.get(interaction.commandName)
 
@@ -201,9 +202,30 @@ client.on(Events.InteractionCreate, async (interaction) => {
       (guild) => guild.id === action.guildId
     )
 
+    const user = await getUserByDiscordId(prisma, interaction.user.id, {
+      did: interaction.user.id,
+      guildId: guildFromDb?.id
+    })
+
     if (action.action == "replythread") {
+      const thread = await getThreadByDiscordId(
+        prisma,
+        action?.threadId as string
+      )
+
       console.log("REPLY")
       // reply as
+      if (!interaction.channel?.isDMBased()) {
+        console.log("Not coming from a DM")
+
+        if (thread?.post.userId !== user?.id) {
+          await interaction.reply({
+            content: "Sorry, friend. this isn't your post to reply to.",
+            ephemeral: true
+          })
+          return
+        }
+      }
       await sendModalToUser(
         interaction,
         guildFromDb?.did as string,
@@ -212,23 +234,71 @@ client.on(Events.InteractionCreate, async (interaction) => {
     }
 
     if (action.action == "closethread") {
-      console.log("CLOSE")
-      const thread = await client.channels.fetch(action.threadId as string)
-      if (!thread?.isThread()) return
-      await thread.setLocked(true)
+      const thread = await getThreadByDiscordId(
+        prisma,
+        action?.threadId as string
+      )
 
-      interaction.reply({
+      console.log("CLOSE")
+
+      if (!interaction.channel?.isDMBased()) {
+        console.log("Not coming from a DM")
+
+        if (thread?.post.userId !== user?.id) {
+          await interaction.reply({
+            content: "Sorry, friend. this isn't your post to reply to.",
+            ephemeral: true
+          })
+          return
+        }
+      }
+
+      const discordThread = await client.channels.fetch(
+        action.threadId as string
+      )
+
+      if (!discordThread?.isThread()) return
+
+      await discordThread.setLocked(true)
+
+      await updatePost(prisma, thread?.did as string, {
+        enabled: false,
+        thread: {
+          update: {
+            closed: true
+          }
+        }
+      })
+
+      await interaction.reply({
         ephemeral: true,
         content: "Your thread has been closed."
       })
     }
 
     if (action.action == "deletethread") {
+      const thread = await getThreadByDiscordId(
+        prisma,
+        action?.threadId as string
+      )
       console.log("DELETE")
-      const thread = await client.channels.fetch(action.threadId as string)
-      if (!thread?.isThread()) return
-      await thread.setArchived(true)
-      await await thread?.delete()
+      const discordThread = await client.channels.fetch(
+        action.threadId as string
+      )
+      if (!discordThread?.isThread()) return
+      await discordThread.setArchived(true)
+      await discordThread?.delete()
+      await discordThread.parent?.delete()
+
+      await updatePost(prisma, thread?.did as string, {
+        enabled: false,
+        thread: {
+          update: {
+            deleted: true
+          }
+        }
+      })
+
       interaction.reply({
         ephemeral: true,
         content: "Your thread has been destroyed."
@@ -236,6 +306,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
     }
 
     if (action.action === "createthread") {
+      console.log("CREATE")
       const command = interaction.client.commands.get("createthread")
       try {
         await command.execute(interaction, user, action.guildId)
@@ -291,7 +362,13 @@ client.on(Events.InteractionCreate, async (interaction) => {
       (channel) => channel.id === guildFromDbModal?.channel
     )
 
-    const dbUser = await getUserByDiscordId(prisma, interaction.user.id)
+    const dbUser = await getUserByDiscordId(prisma, interaction.user.id, {
+      did: interaction.user.id,
+      guildId: guildFromDbModal?.id
+    })
+
+    console.log("GUILD: ", guildFromDbModal?.id)
+    console.log("USER: ", dbUser?.id)
 
     if (action.action == "submitreply") {
       const threadChannel = client?.channels.cache.find(
@@ -313,7 +390,9 @@ client.on(Events.InteractionCreate, async (interaction) => {
         (user) => user.id === dbUser?.did
       )
 
-      userDiscordObject?.send(`Reply, sent! ${link}`)
+      if (interaction.channel?.isDMBased()) {
+        userDiscordObject?.send(`Reply, sent! ${link}`)
+      }
     }
 
     if (action.action == "submitmodal") {
@@ -339,9 +418,6 @@ client.on(Events.InteractionCreate, async (interaction) => {
   }
 
   if (interaction.isAnySelectMenu()) {
-    console.log(`customId for select: ${interaction.customId}`)
-    console.log(`value: ${interaction.values.toString()}`)
-
     const action = getGuildFromInteraction(interaction.customId)
 
     const guildFromDb = await getGuildByDiscordId(

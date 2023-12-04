@@ -3,7 +3,7 @@ import {
   TextChannel,
   ThreadAutoArchiveDuration
 } from "discord.js"
-import { DiscordUser } from "@prisma/client"
+import { DiscordUser, PrismaClient } from "@prisma/client"
 import { create } from "../templates"
 import {
   createPost,
@@ -16,7 +16,7 @@ const submitmodal = {
   data: { name: "submitmodal" },
   async execute(
     interaction: ModalMessageModalSubmitInteraction,
-    prisma: any,
+    prisma: PrismaClient,
     channel: TextChannel,
     dbUser: DiscordUser
   ) {
@@ -30,16 +30,26 @@ const submitmodal = {
 
     // name will be stored against the post
 
-    const json = create(title, alteredText, dbUser.alias)
-
-    const newPost = await channel.send(json)
+    const newPost = await channel.send("New post incoming...")
 
     const newThread = await newPost.startThread({
       name: `${title} - asked by ${dbUser.alias}`,
       autoArchiveDuration: ThreadAutoArchiveDuration.OneWeek
     })
 
+    const json = create(
+      title,
+      alteredText,
+      dbUser.alias,
+      channel.guildId,
+      newThread.id
+    )
+
+    await newPost.edit(json)
+
     // db stuff
+
+    console.log("DB!", dbUser.id)
 
     const dbPost = await createPost(prisma, {
       did: newPost.id,
@@ -51,13 +61,21 @@ const submitmodal = {
       }
     })
 
-    updateUser(prisma, dbUser.did, {
-      posts: {
-        connect: {
-          id: dbPost.id
+    updateUser(
+      prisma,
+      dbUser.did,
+      {
+        posts: {
+          connect: {
+            id: dbPost.id
+          }
         }
+      },
+      {
+        did: dbUser.did,
+        guildId: dbUser.guildId
       }
-    })
+    )
 
     createThread(prisma, {
       did: newThread.id,

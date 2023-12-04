@@ -11,7 +11,12 @@ const getPostsByUserDiscordId = async (
   const record = await client.discordUser.findFirst({
     where: {
       did: id,
-      guildId: guildRecord?.id
+      guildId: guildRecord?.id,
+      posts: {
+        every: {
+          enabled: true
+        }
+      }
     },
     include: {
       posts: true

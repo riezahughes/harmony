@@ -42,6 +42,7 @@ model DiscordPost {
   dateAdded   DateTime?      @default(now())
   user        DiscordUser    @relation(fields: [userId], references: [id])
   thread      DiscordThread?
+  enabled     Boolean        @default(true)
   userId      Int
 }
 

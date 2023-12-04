@@ -1,22 +1,21 @@
 import { Prisma, PrismaClient } from "@prisma/client"
 
-const updateUser = async (
+const updateThread = async (
   client: PrismaClient,
   did: string,
-  data: Prisma.DiscordUserUpdateInput,
-  where: Prisma.DiscordUserWhereInput = { did: did }
+  data: Prisma.DiscordThreadUpdateInput,
+  where: Prisma.DiscordThreadWhereInput = { did: did }
 ) => {
   try {
     console.log("Attempting to save user...")
 
-    const findRecord = await client.discordUser.findFirst({
+    const findRecord = await client.discordThread.findFirst({
       where
     })
 
-    const record = await client.discordUser.update({
+    const record = await client.discordThread.update({
       where: {
-        id: findRecord?.id,
-        guildId: findRecord?.guildId
+        id: findRecord?.id
       },
       data: data
     })
@@ -28,4 +27,4 @@ const updateUser = async (
     throw Error("Could not get guild: " + e)
   }
 }
-export default updateUser
+export default updateThread
