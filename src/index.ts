@@ -246,7 +246,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
         if (thread?.post.userId !== user?.id) {
           await interaction.reply({
-            content: "Sorry, friend. this isn't your post to reply to.",
+            content: "Sorry, friend. this isn't your post to close.",
             ephemeral: true
           })
           return
@@ -282,6 +282,19 @@ client.on(Events.InteractionCreate, async (interaction) => {
         action?.threadId as string
       )
       console.log("DELETE")
+
+      if (!interaction.channel?.isDMBased()) {
+        console.log("Not coming from a DM")
+
+        if (thread?.post.userId !== user?.id) {
+          await interaction.reply({
+            content: "Sorry, friend. this isn't your post to delete.",
+            ephemeral: true
+          })
+          return
+        }
+      }
+
       const discordThread = await client.channels.fetch(
         action.threadId as string
       )

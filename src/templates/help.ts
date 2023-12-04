@@ -39,20 +39,6 @@ const help = (
         style: 3,
         label: "Start a thread",
         customId: `createthread~${guildId}`
-      },
-      {
-        type: 2,
-        style: 2,
-        label: "Close Existing Thread",
-        customId: `closethread~${guildId}`,
-        disabled: true
-      },
-      {
-        type: 2,
-        style: 2,
-        label: "Delete Existing Thread",
-        customId: `deletethread~${guildId}`,
-        disabled: true
       }
     ]
   }
