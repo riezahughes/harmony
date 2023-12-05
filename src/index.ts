@@ -19,7 +19,8 @@ import {
   sendModalToUser,
   sendMessageToThread,
   getThreadByDiscordId,
-  updatePost
+  updatePost,
+  sendModalToJoin
 } from "./functions"
 
 import { adjustThread, botJoin, botReturn } from "./templates"
@@ -193,10 +194,13 @@ client.on(Events.InteractionCreate, async (interaction) => {
   if (interaction.isButton()) {
     const action = getGuildFromInteraction(interaction.customId)
 
+    console.log(action)
+
     const guildFromDb = await getGuildByDiscordId(
       prisma,
       action.guildId as string
     )
+    console.log(guildFromDb)
 
     const guildDiscordObject = client.guilds.cache.find(
       (guild) => guild.id === action.guildId
@@ -362,7 +366,9 @@ client.on(Events.InteractionCreate, async (interaction) => {
     }
 
     if (action.action == "joinchannel") {
-      // join channel goes here
+      console.log("JOIN CHANNEL button")
+      await sendModalToJoin(interaction, guildFromDb?.did as string)
+      await interaction.reply({ content: "Enter channel id", ephemeral: true })
     }
   }
 
@@ -429,6 +435,28 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
       userDiscordObject?.send(
         `Thank you. Your thread has been created. ${link}`
+      )
+    }
+    if (action.action == "submitchannel") {
+      console.log("SUBMIT CHANNEL")
+      const checkChannel = await client.channels.cache.find((channel) => {
+        const chnl = interaction.fields.getField("channelInput").value
+        return channel.id == chnl.toString()
+      })
+      console.log(interaction.fields.getField("channelInput"))
+      console.log(checkChannel?.id)
+
+      if (!checkChannel) {
+        await interaction.reply("Not a valid channel! Try again.")
+        return
+      }
+
+      await updateGuild(prisma, guildFromDbModal?.did as string, {
+        channel: checkChannel.id
+      })
+
+      await interaction.reply(
+        "Channel Set! Thanks! If you need to set this up again, just kick me out and bring me back in. (I'm developed by a lazy developer)"
       )
     }
   }
