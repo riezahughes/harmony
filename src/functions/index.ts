@@ -15,7 +15,7 @@ import sendMessageToGPT from "./gpt/sendMessagetoGPT"
 import sendMessageToThread from "./sendMessageToThread"
 import updateThread from "./db/updateThread"
 import updatePost from "./db/updatePost"
-
+import sendModalToJoin from "./sendModalToJoin"
 import updateGuild from "./db/updateGuild"
 import updateUser from "./db/updateUser"
 
@@ -38,5 +38,6 @@ export {
   sendModalToUser,
   sendMessageToThread,
   updateThread,
-  updatePost
+  updatePost,
+  sendModalToJoin
 }
