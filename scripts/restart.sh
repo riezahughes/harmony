@@ -1,4 +1,4 @@
-# /bin/bash
+# !/bin/bash
 # stop and start the service
 
 servicename="healthbot"
