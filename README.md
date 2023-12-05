@@ -32,6 +32,15 @@ Break the bot out to deal with multiple servers
 - [x] On "create thread" store the created post and thread id's against the user. (One to many).
 - [ ] On reply, keep a stock of how many replies have been sent
 
+# Extra Setup
+
+- [ ] Set up bun on the server
+- [ ] Create a user on the server for github
+- [ ] Set up ssh for the account using that user
+- [ ] Create a limited directory for github to send files to
+- [ ] Set up a service for the directory (daemon)
+- [ ] Set up a github action to, on merge, checkout, send files via ssh and trigger a restart on ssh
+
 # Quick Commands
 
 `bunx prisma migrate dev --name [name]` - migration
@@ -40,9 +49,6 @@ Break the bot out to deal with multiple servers
 # Reminders
 
 - POST BEING REFERENCED AS SOMEONE ELSE?
-- delete the message as well as the thread.
-- Fix up a simple response service for a good bot loop
-- remove redundant buttons
 - sort out proper editting of messages and pings by the bot
 - Sort out all the shitty "commands" folder crap. Seriously it's awful
 - Logging adjustment
