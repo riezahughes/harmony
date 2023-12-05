@@ -13,6 +13,13 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Bun Installer
+        uses: oven-sh/setup-bun@v1
+
+      - name: Install Dependancies
+        run: bun install
+
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh/
