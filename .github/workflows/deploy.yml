@@ -11,6 +11,8 @@ jobs:
   deploy-bot:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh/
@@ -22,4 +24,4 @@ jobs:
       - name: copy builds to server
         run: |
           rsync -vrm . ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/${{ secrets.SSH_USER }}/
-          echo ${{ secrets.SSH_USER_PASS }} | ssh -tt ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "sudo bash /home/${{ secrets.SSH_USER }}/health-bot/scripts/restart.sh"
+          echo ${{ secrets.SSH_USER_PASS }} | ssh -tt ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "sudo bash /home/${{ secrets.SSH_USER }}/health-bot/src/scripts/restart.sh"
