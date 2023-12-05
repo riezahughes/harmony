@@ -23,5 +23,5 @@ jobs:
           ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
       - name: copy builds to server
         run: |
-          rsync -vrm . ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/${{ secrets.SSH_USER }}/
+          rsync -vrm . ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/${{ secrets.SSH_USER }}/health-bot
           echo ${{ secrets.SSH_USER_PASS }} | ssh -tt ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "sudo bash /home/${{ secrets.SSH_USER }}/health-bot/src/scripts/restart.sh"
