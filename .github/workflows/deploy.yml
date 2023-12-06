@@ -31,7 +31,7 @@ jobs:
       - name: copy builds to server
         run: |
           rsync -qrm . ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/${{ secrets.SSH_USER }}/health-bot
-          echo ${{ secrets.SSH_USER_PASS }} | ssh -tt ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "source ~/.nvm/nvm.sh && cd /home/${{ secrets.SSH_USER }}/health-bot/ && sudo /home/${{ secrets.SSH_USER }}/.bun/bin/bun x prisma migrate deploy"
-          echo ${{ secrets.SSH_USER_PASS }} | ssh -tt ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "source ~/.nvm/nvm.sh && cd /home/${{ secrets.SSH_USER }}/health-bot/ && sudo /home/${{ secrets.SSH_USER }}/.bun/bin/bun x prisma generate"           
+          echo ${{ secrets.SSH_USER_PASS }} | ssh -tt ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "source ~/.nvm/nvm.sh && cd /home/${{ secrets.SSH_USER }}/health-bot/ && /home/${{ secrets.SSH_USER }}/.bun/bin/bun x prisma migrate deploy"
+          echo ${{ secrets.SSH_USER_PASS }} | ssh -tt ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "source ~/.nvm/nvm.sh && cd /home/${{ secrets.SSH_USER }}/health-bot/ && /home/${{ secrets.SSH_USER }}/.bun/bin/bun x prisma generate"           
           echo ${{ secrets.SSH_USER_PASS }} | ssh -tt ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "sudo chmod +x /home/${{ secrets.SSH_USER }}/health-bot/scripts/restart.sh"
           echo ${{ secrets.SSH_USER_PASS }} | ssh -tt ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "sudo bash /home/${{ secrets.SSH_USER }}/health-bot/scripts/restart.sh"
