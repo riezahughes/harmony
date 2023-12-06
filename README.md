@@ -1,5 +1,7 @@
 # Mental Health Discord Bot
 
+![image](https://github.com/riezahughes/health-clinic/assets/29428400/0577c1a1-9fbb-4832-ba7d-dabae1e1dca5)
+
 This bot is being created to help those who struggle to reach out. It will be an anonymous messaging service in which you can create threads and reply anonymously. There's not much else to it. It will support using ChatGPT and a simple list of nouns/verbs to help hide who's really writing by making everyones tone seem the same. Below are some simple user stories and milestones.
 
 As a user i want to be able to post my feelings anonymously
