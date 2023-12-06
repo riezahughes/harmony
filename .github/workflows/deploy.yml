@@ -28,10 +28,20 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa.pub
           ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
-      - name: copy builds to server
+
+      - name: Copy files to server
         run: |
           rsync -qrm . ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/${{ secrets.SSH_USER }}/health-bot
+
+      - name: Run Migrations
+        run: |
           echo ${{ secrets.SSH_USER_PASS }} | ssh -tt ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "source ~/.nvm/nvm.sh && cd /home/${{ secrets.SSH_USER }}/health-bot/ && /home/${{ secrets.SSH_USER }}/.bun/bin/bun x prisma migrate deploy"
-          echo ${{ secrets.SSH_USER_PASS }} | ssh -tt ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "source ~/.nvm/nvm.sh && cd /home/${{ secrets.SSH_USER }}/health-bot/ && /home/${{ secrets.SSH_USER }}/.bun/bin/bun x prisma generate"           
+
+      - name: Run Module Generation
+        run: |
+          echo ${{ secrets.SSH_USER_PASS }} | ssh -tt ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "source ~/.nvm/nvm.sh && cd /home/${{ secrets.SSH_USER }}/health-bot/ && /home/${{ secrets.SSH_USER }}/.bun/bin/bun x prisma generate"
+
+      - name: Restart Daemon
+        run: |
           echo ${{ secrets.SSH_USER_PASS }} | ssh -tt ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "sudo chmod +x /home/${{ secrets.SSH_USER }}/health-bot/scripts/restart.sh"
           echo ${{ secrets.SSH_USER_PASS }} | ssh -tt ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "sudo bash /home/${{ secrets.SSH_USER }}/health-bot/scripts/restart.sh"
