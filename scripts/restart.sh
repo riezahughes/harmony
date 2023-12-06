@@ -1,7 +1,8 @@
-# !/bin/bash
+#!/bin/bash
 # stop and start the service
 
 servicename="healthbot"
+
 
 if systemctl --all --type service | grep -q "$servicename";then
     service $servicename stop
