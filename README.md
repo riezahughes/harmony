@@ -39,7 +39,7 @@ Break the bot out to deal with multiple servers
 - [x] Set up ssh for the account using that user
 - [x] Create a limited directory for github to send files to
 - [x] Set up a service for the directory (daemon)
-- [ ] Set up a github action to, on merge, checkout, send files via ssh and trigger a restart on ssh
+- [x] Set up a github action to, on merge, checkout, send files via ssh and trigger a restart on ssh
 
 # Quick Commands
 
@@ -48,10 +48,8 @@ Break the bot out to deal with multiple servers
 
 # Reminders
 
-- POST BEING REFERENCED AS SOMEONE ELSE?
 - sort out proper editting of messages and pings by the bot
 - Sort out all the shitty "commands" folder crap. Seriously it's awful
 - Logging adjustment
-- CI/CD deployment (almost there)
 - Sort out an issue with mobile, where thread show the buttons in the OP but dont on desktop (will need to sort functionality
   )
