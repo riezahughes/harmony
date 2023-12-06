@@ -5,8 +5,6 @@ servicename="healthbot"
 
 
 if systemctl --all --type service | grep -q "$servicename";then
-    npx prisma migrate deploy
-    npx prisma generate
     service $servicename stop
     systemctl daemon-reload
     service $servicename start
