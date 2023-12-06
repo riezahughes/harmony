@@ -23,22 +23,22 @@ As a user i want to be able to close any conversations, with the option to compl
 
 Break the bot out to deal with multiple servers
 
-- [ ] Set the slash command to be available "globally".
+- [x] Set the slash command to be available "globally".
 - [x] Set up database for storing guild id's, user id's, channel id's, post id's and thread id's
 - [x] On join of server, save guild id, save user who added bot.
-- [ ] Message the user who added so you can select which channel to use (list/string input/by id)
+- [x] Message the user who added so you can select which channel to use (list/string input/by id)
 - [x] Save the channel id.
 - [x] On /help, check if the user exists. If the user doesn't exist, store their user id against the guild they used the command from, and create a custom name against them using the name generator.
 - [x] On "create thread" store the created post and thread id's against the user. (One to many).
-- [ ] On reply, keep a stock of how many replies have been sent
+- [ ] On reply, keep a stock of how many replies have been sent? Maybe? Maybe not? Metrics, probably.
 
 # Extra Setup
 
-- [ ] Set up bun on the server
-- [ ] Create a user on the server for github
-- [ ] Set up ssh for the account using that user
-- [ ] Create a limited directory for github to send files to
-- [ ] Set up a service for the directory (daemon)
+- [x] Set up bun on the server
+- [x] Create a user on the server for github
+- [x] Set up ssh for the account using that user
+- [x] Create a limited directory for github to send files to
+- [x] Set up a service for the directory (daemon)
 - [ ] Set up a github action to, on merge, checkout, send files via ssh and trigger a restart on ssh
 
 # Quick Commands
@@ -52,4 +52,6 @@ Break the bot out to deal with multiple servers
 - sort out proper editting of messages and pings by the bot
 - Sort out all the shitty "commands" folder crap. Seriously it's awful
 - Logging adjustment
-- CI/CD deployment
+- CI/CD deployment (almost there)
+- Sort out an issue with mobile, where thread show the buttons in the OP but dont on desktop (will need to sort functionality
+  )
