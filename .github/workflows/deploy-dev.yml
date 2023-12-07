@@ -31,7 +31,7 @@ jobs:
 
       - name: Copy files to server
         run: |
-          rsync -qrm . ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/${{ secrets.SSH_USER }}/health-bot
+          rsync -qrm . ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/${{ secrets.SSH_USER }}/health-bot-dev
 
       - name: Run Migrations
         run: |
