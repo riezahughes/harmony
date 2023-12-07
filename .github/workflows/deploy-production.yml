@@ -44,4 +44,4 @@ jobs:
       - name: Restart Daemon
         run: |
           echo ${{ secrets.SSH_USER_PASS }} | ssh -tt ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "sudo chmod +x /home/${{ secrets.SSH_USER }}/health-bot/scripts/restart.sh"
-          echo ${{ secrets.SSH_USER_PASS }} | ssh -tt ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "sudo bash /home/${{ secrets.SSH_USER }}/health-bot/scripts/restart.sh"
+          echo ${{ secrets.SSH_USER_PASS }} | ssh -tt ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "sudo bash /home/${{ secrets.SSH_USER }}/health-bot/scripts/restart.sh healthbot"
