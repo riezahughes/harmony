@@ -126,11 +126,15 @@ client.on(Events.GuildDelete, async (event) => {
 
 // on thread message
 client.on(Events.MessageCreate, async (msg) => {
-  if (msg.channel.type == ChannelType.PublicThread && !msg.author.bot) {
+  if (msg.channel.type == ChannelType.GuildText && !msg.author.bot) {
+    const dbGuild = await getGuildByDiscordId(prisma, msg.guild?.id as string)
+    if (dbGuild?.channel == msg.channel.id) {
+      await msg.delete()
+    }
     // const threadInDb = await getThreadByDiscordId(prisma, msg.thread?.id as string)
     // i have recieved a message that was in a thread
     // i will check the thread exists in the db
-    // i will get the post details from the db
+    // i will get the post details from the dba
   }
 })
 
