@@ -28,8 +28,6 @@ import getGuildFromInteraction from "./functions/getGuildFromInteraction"
 
 const { TOKEN, CHANNEL_ID, GUILD_ID } = process.env
 
-console.log(TOKEN, CHANNEL_ID, GUILD_ID)
-
 if (!TOKEN || !CHANNEL_ID || !GUILD_ID) throw Error("Token not set.")
 
 // Create a new client instance
@@ -131,10 +129,6 @@ client.on(Events.MessageCreate, async (msg) => {
     if (dbGuild?.channel == msg.channel.id) {
       await msg.delete()
     }
-    // const threadInDb = await getThreadByDiscordId(prisma, msg.thread?.id as string)
-    // i have recieved a message that was in a thread
-    // i will check the thread exists in the db
-    // i will get the post details from the dba
   }
 })
 
