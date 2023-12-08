@@ -55,3 +55,4 @@ Break the bot out to deal with multiple servers
 - Logging adjustment
 - Sort out an issue with mobile, where thread show the buttons in the OP but dont on desktop (will need to sort functionality
   )
+- changing channels
