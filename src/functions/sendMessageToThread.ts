@@ -1,6 +1,6 @@
 import { ThreadChannel, ModalSubmitInteraction } from "discord.js"
 import { reply } from "../templates"
-import sendMessageToGPT from "./gpt/sendMessagetoGPT"
+import sendMessageToClaude from "./ai/sendMessageToClaude"
 import { PrismaClient } from "@prisma/client"
 
 const sendMessageToThread = async (
@@ -16,7 +16,7 @@ const sendMessageToThread = async (
     content: "On its way!"
   })
 
-  const msg = await sendMessageToGPT(value)
+  const msg = await sendMessageToClaude(value)
 
   const json = reply(msg, alias)
 
