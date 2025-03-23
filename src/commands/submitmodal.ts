@@ -8,7 +8,7 @@ import { create } from "../templates"
 import {
   createPost,
   updateUser,
-  sendMessageToGPT,
+  sendMessageToClaude,
   createThread
 } from "../functions/"
 
@@ -26,7 +26,7 @@ const submitmodal = {
 
     interaction.reply("I'm working on it! Give me one second...")
 
-    const alteredText = await sendMessageToGPT(text as string)
+    const alteredText = await sendMessageToClaude(text as string)
 
     // name will be stored against the post
 
