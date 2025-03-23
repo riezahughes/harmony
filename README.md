@@ -1,6 +1,8 @@
 # Mental Health Discord Bot
 
-![image](https://github.com/riezahughes/health-clinic/assets/29428400/0577c1a1-9fbb-4832-ba7d-dabae1e1dca5)
+![image](https://github.com/riezahughes/health-clinic/assets/29428400/0577c1a1-9fbb-4832-ba7d-dabae1e1dca | width=100)
+
+[Invite it here](https://discord.gg/C7q8P49GTM)
 
 This bot is being created to help those who struggle to reach out. It will be an anonymous messaging service in which you can create threads and reply anonymously. There's not much else to it. It will support using ChatGPT and a simple list of nouns/verbs to help hide who's really writing by making everyones tone seem the same. Below are some simple user stories and milestones.
 
@@ -53,6 +55,6 @@ Break the bot out to deal with multiple servers
 - sort out proper editting of messages and pings by the bot
 - Sort out all the shitty "commands" folder crap. Seriously it's awful
 - Logging adjustment
-- Sort out an issue with mobile, where thread show the buttons in the OP but dont on desktop (will need to sort functionality
-  )
+- Sort out an issue with mobile, where thread show the buttons in the OP but dont on desktop (will need to sort functionality)
 - changing channels
+- trying out forums
