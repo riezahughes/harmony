@@ -58,3 +58,4 @@ Break the bot out to deal with multiple servers
 - Sort out an issue with mobile, where thread show the buttons in the OP but dont on desktop (will need to sort functionality)
 - changing channels
 - trying out forums
+- should probably rewrite this. It's ancient and could do with some cleanup
